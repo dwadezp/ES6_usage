@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Classes</title>
+</head>
+<body>
+
+<script type="text/javascript">
+  /**
+     ES6 Symbols
+     Symbols are a new primitive type in ECMAScript 6.
+     it’s clear that Object.getOwnPropertySymbols() takes away the ability to truly make members of a class private even if they are set using Symbol instances. So take this post with a grain of salt. You can mask things from consumers of your APIs, but you can’t completely block access to them.
+    */
+  (function(){
+    'user strict';
+     class Parent {
+       constructor(name) {
+         this.name = name;
+       }
+
+       publicMethod() {
+         return "i'm public method for name" + this.name;
+       }
+     }
+     class Child extends Parent {
+       constructor(name) {
+         super(name);
+       }
+     }
+
+
+     const cld = new Child('OOP');
+     cld.publicMethod(); //"i'm public method for nameOOP"
+
+     /**
+     Private data for classes
+     1.Keeping private data in the environment of a class constructor
+     **/
+      class SomeClass {
+        constructor() {
+          const privateVar = 'somePrivateStuff';//it's closeed inside of constructor
+          this.get = () => {
+            return privateVar;
+          }
+        }
+      }
+      const someClassInst = new SomeClass();
+      someClassInst.privateVar; // undefined
+      someClassInst.get();//somePrivateStuff
+      //2. Using Symbols
+      const SomeClasSymbol = (function(){
+          const privateMethod =  Symbol('privateMethod');
+          const privateProperty = Symbol('privateSymbol');
+
+          class SomeClass {
+            constructor() {
+              this.notPrivateProp =  'Non Private';
+              this[privateProperty] =  'Private';
+            }
+            [privateMethod] () {
+              console.log('Private method');
+            }
+            notPrivate () {
+              console.log('Not private method');
+            }
+          }
+
+          return SomeClass;
+        })();
+
+        const someInst = new SomeClasSymbol();
+
+        const privateMethod =  Symbol('privateMethod'); //Notice that this is different symbol.Every symbol is unic
+        //Symbol('privateMethod') === Symbol('privateMethod')  will return false;
+        const privateProperty = Symbol('privateSymbol');
+
+        debugger;
+        //someInst[privateMethod]();//symbols.html:44 Uncaught TypeError: someInst[privateMethod] is not a function
+        someInst[privateProperty];//undefined because this privateProperty symbol is not equal to symbol from line 18
+
+        /// Using weakmap
+        const MyClass = (function(){
+          const first_name = new WeakMap();
+
+          class MyClass {
+            constructor () {
+              first_name.set(this, 'Valera');
+            }
+            getName() {
+              return first_name.get(this);
+            }
+          }
+          return MyClass;
+        })();
+        const inst = new MyClass();
+        debugger;
+        inst.first_name;//undefined
+        inst.getName(); // Valera
+        // Why is it better then old closure?
+        var factory = function () {
+          var privateData = {};
+          return {
+            privilegedMethod: function () {
+                  // do something with `privateData`
+            }
+          };
+        };
+        /**
+          Since the privileged methods in the above factory are created on the fly, the runtime environment has to allocate memory for them each time a new object is instantiated (even though the functions are identical). WeakMaps allow you to both reuse the same allocated methods and truly encapsulate private data.
+        */
+
+  })();
+
+</script>
+
+
+</body>
+</html>

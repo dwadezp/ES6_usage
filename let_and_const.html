@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Using const and let</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+    (function(){
+      'user strict';
+      //Prefer const. You can use it whenever a variable never changes its value. Changing an object that a const variable refers to is allowed.
+      const constObject = {};
+      constObject.someProp = 123;//ok
+      constObject = {};//Uncaught TypeError: Assignment to constant variable.
+      const simpleConstVar = 123;
+      simpleConstVar = 5;//Uncaught TypeError: Assignment to constant variable.
+
+      //Use let – when the initial value of a variable changes later on
+      let simpleVar = 5;
+      simpleVar = 6; //Ok
+
+      //Both let and const create variables that are block-scoped – they only exist within the innermost block that surrounds them.
+      function simpleFunct() {
+        if (true) {
+          const bloclConst = 123;
+        }
+        console.log(bloclConst); // ReferenceError: bloclConst is not defined
+      }
+
+      //!!!! IMPORTANT  let is only visible in the for() loop and var is visible to the whole function.
+
+      const someArrForVar = [];
+      for (var i=0; i < 3; i++) { //HERE IS VAR!!!
+          someArrForVar.push(() => i);
+      }
+      someArrForVar.map(x => x()); // [3,3,3]
+
+      const someArrForLet = [];
+      for (let i=0; i < 3; i++) {
+          someArrForLet.push(() => i);
+      }
+      someArrForLet.map(x => x()); // [0,1,2]
+      debugger;
+
+    })();
+    </script>
+  </body>
+</html>

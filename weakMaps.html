@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Weakmaps ES6</title>
+</head>
+<body>
+  <div class="element"></div>
+<script type="text/javascript">
+  /**
+     ES6 Symbols
+     The ECMAScript 6 WeakMap type is an unordered list of key-value pairs where the key must be a non-null object and the value can be of any type. The interface for WeakMap is very similar to that of Map in that set() and get() are used to add data and retrieve data
+    */
+    const map = new WeakMap(),
+        element = document.querySelector(".element");
+
+    map.set(element, "Original");
+
+    // later
+    const value = map.get(element);
+    console.log(value);             // "Original"
+
+    // later still - remove reference
+    element.parentNode.removeChild(element);
+    element = null;
+
+    value = map.get(element);
+    console.log(value);             // undefined
+    /**
+      If the DOM element is then removed from the document and the variable referencing it is set to null, then the data is also removed from the weakmap and the next attempt to retrieve data associated with the DOM element fails.
+      ***
+      Use cases
+      Some use cases that would otherwise cause a memory leak and are enabled by WeakMaps include:
+
+      Keeping private data about a specific object and only giving access to it to people with a reference to the Map. A more ad-hoc approach is coming with the private-symbols proposal but that's a long time from now.
+      Keeping data about library objects without changing them or incurring overhead.
+      Keeping data about a small set of objects where many objects of the type exists to not incur problems with hidden classes JS engines use for objects of the same type.
+      Keeping data about host objects like DOM nodes in the browser.
+      Adding a capability to an object from the outside (like the event emitter example in the other answer).
+      ***
+
+
+
+      It can be used to extend an object from the outside. Let's give a practical (adapted, sort of real - to make a point) example from the real world of io.js.
+
+      Let's say you're io.js and you have Promise objects - now you want to keep track of all the currently rejected promises - however you do not want to keep them from being garbage collected in case no references exist to them.
+
+      Now, you don't want to add properties to native objects for obvious reasons - so you're stuck. If you keep references to the promises you're causing a memory leak since no garbage collection can happen - if you don't keep references you can't save additional information about individual promises. Any scheme that involves saving the ID of a promise inherently means you need a reference to it.
+    */
+
+</script>
+
+
+</body>
+</html>

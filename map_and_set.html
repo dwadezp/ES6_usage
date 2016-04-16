@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>map set ES6</title>
+</head>
+<body>
+  <div class="element"></div>
+<script type="text/javascript">
+/**
+A set is in an ordered list of values that cannot contain duplicates. You typically don’t access items in the set like you would items in an array, instead it’s much more common to check the set to see if a value is present.
+ECMAScript 6 introduces the Set type1 as a set implementation for JavaScript. You can add values to a set by using the add() method and see how many items are in the set using size:
+*/
+const items = new Set();
+items.add(5);
+items.add("5");
+
+console.log(items.size); //2 because ECMAScript 6 sets do not coerce values in determining whether or not to values are the same.
+
+const items = new Set([1, 2, 3, 4, 5, 5, 5, 5]);
+console.log(items.size);    // 5  The number 5 Only appears once in the set even though it appears four times in the array.
+
+//You can test to see which items are in the set using the has() method
+console.log(items.has(5));    // true
+console.log(items.has(6));    // false
+
+items.delete(5)
+
+console.log(items.has(5));    // false
+
+items.clear() //to remove all items
+
+const items = new Set([1, 2, 3, 4, 5]);
+/**
+Even though there is no random access to items in a set, it still possible to iterate over all of the sets values by using the new ECMAScript 6 for-of statement2.
+*/
+for (let num of items) {
+    console.log(num);
+}
+
+
+/**
+Maps1, like sets, are also a familiar topic for those coming from other languages. The basic idea is to map a value to a unique key in such a way that you can retrieve that value at any point in time by using the key.
+
+The ECMAScript 6 Map type is an ordered list of key-value pairs where both the key and the value can be of any type. A key of 5 is different than a key of "5"
+*/
+const map = new Map();
+map.set("name", "Nicholas");
+map.set(document.getElementById("my-div"), { flagged: false });
+
+// later
+const name = map.get("name"),
+      meta = map.get(document.getElementById("my-div"));//associating meta data with a DOM element
+
+console.log(map.has("name"));   // true
+console.log(map.get("name"));   // "Nicholas"
+console.log(map.size);        // 1
+
+map.delete("name");
+console.log(map.has("name"));   // false
+console.log(map.get("name"));   // undefined
+console.log(map.size);        // 0
+
+
+map.clear();
+console.log(map.has("name"));   // false
+console.log(map.get("name"));   // undefined
+console.log(map.size);        // 0
+
+/***
+When you want to work with all of the data in the map, you have several options. There are actually three generator methods to choose from: keys, which iterates over the keys in the map, values, which iterates over the values in the map, and items, which iterates over key-value pairs by returning an array containing the key and the value (items is the default iterator for maps).
+*/
+
+for (let key of map.keys()) {
+    console.log("Key: %s", key);
+}
+
+for (let value of map.values()) {
+    console.log("Value: %s", value);
+}
+
+for (let item of map.items()) {
+    console.log("Key: %s, Value: %s", item[0], item[1]);
+}
+
+// same as using map.items()
+for (let item of map) {
+    console.log("Key: %s, Value: %s", item[0], item[1]);
+}
+
+</script>
+
+
+</body>
+</html>

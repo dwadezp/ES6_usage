@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Sybmols ES6</title>
+</head>
+<body>
+
+<script type="text/javascript">
+  /**
+     ES6 Symbols
+     Symbols are a new primitive type in ECMAScript 6.
+     it’s clear that Object.getOwnPropertySymbols() takes away the ability to truly make members of a class private even if they are set using Symbol instances. So take this post with a grain of salt. You can mask things from consumers of your APIs, but you can’t completely block access to them.
+    */
+  (function(){
+    'user strict';
+    const SomeClass = (function(){
+      const privateMethod =  Symbol('privateMethod');
+      const privateProperty = Symbol('privateSymbol');
+
+      class SomeClass {
+        constructor() {
+          this.notPrivateProp =  'Non Private';
+          this[privateProperty] =  'Private';
+        }
+        [privateMethod] () {
+          console.log('Private method');
+        }
+        notPrivate () {
+          console.log('Not private method');
+        }
+      }
+
+      return SomeClass;
+    })();
+
+    const someInst = new SomeClass();
+
+    const privateMethod =  Symbol('privateMethod'); //Notice that this is different symbol.Every symbol is unic
+    //Symbol('privateMethod') === Symbol('privateMethod')  will return false;
+    const privateProperty = Symbol('privateSymbol');
+
+    debugger;
+    //someInst[privateMethod]();//symbols.html:44 Uncaught TypeError: someInst[privateMethod] is not a function
+    someInst[privateProperty];//undefined because this privateProperty symbol is not equal to symbol from line 18
+
+    //We can create real immutable enums!
+    const AUDI = Symbol('audiSymbolDescr');
+    const BMW = Symbol('bmwSymbolDescr');
+    const CarsEnum = {};
+
+    Object.defineProperty(CarsEnum, 'AUDI', {
+      writable: false, //so we won't be able to change this property in future;
+      value: AUDI
+    });
+    Object.defineProperty(CarsEnum, 'BMW', {
+      writable: false, //so we won't be able to change this property in future;
+      value: BMW // this is our BMW symbol
+    });
+
+    function getCarDetails(car) {
+      switch (car) {
+        case AUDI:
+          return 'This is audi';
+        case BMW:
+          return 'This is BMW';
+        default:
+          return 'I dont know such car';
+      }
+    }
+
+    const AUDI_NEW = Symbol('audiSymbolDescr');
+
+    getCarDetails (CarsEnum.AUDI);//'This is audi';
+    getCarDetails (AUDI_NEW);//'I dont know such car'; Because Symbol('audiSymbolDescr')!== Symbol('audiSymbolDescr')
+
+  })();
+
+</script>
+
+
+</body>
+</html>
