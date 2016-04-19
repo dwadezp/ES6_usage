@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Using const and let</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+    (function(){
+      'user strict';
+      //Prefer const. You can use it whenever a variable never changes its value. Changing an object that a const variable refers to is allowed.
+
+      // Old JS
+      const obj = {};
+      obj.first = 'Jane';
+      obj.last = 'Doe';
+      //And it has operations for extracting data:
+
+      const f = obj.first;
+      const l = obj.last;
+      //Destructuring in ECMAScript 6 enables the same
+      // syntax for extracting data, where it is called an object pattern:
+
+      const { first: f, last: l } = obj;
+      // you can use destructin to arrays
+      const [x, y] = ['a', 'b']; // x = 'a'; y = 'b'
+
+      const paramObj = {
+         brand: 'Audi',
+         model: '80',
+         engine: 1.8,
+         engineType: 'patrol',
+         abs: true
+      }
+
+      function renderCarInfo(params) {
+        const {brand: brand, model: model, engine: engine, engineType: engineType, abs: abs} = params;
+        console.log(brand); // brand
+        console.log(model); // model
+
+        //and so on. In ES5 we have to create with var variable for each property
+        // var brand = params.brand;
+        // var model = params.model;
+      }
+      renderCarInfo(paramObj);
+
+    })();
+    </script>
+  </body>
+</html>
