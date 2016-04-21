@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Iterators and iterable</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+    (function(){
+      'user strict';
+      //Iterators
+      /**
+      • An iterable is a data structure that wants to make its elements accessible to the public.
+        It does so by implementing a method whose key is Symbol.iterator. That method is a
+        factory for iterators.
+      • An iterator is a pointer for traversing the elements of a data structure (think cursors in
+        databases).
+      */
+      const myArray = ["bmw", "audi", "merc"];
+      for (var value of myArray) {
+          console.log(value);
+      }
+      //myArray.next()//undefined
+      debugger;
+      // bmw audi merc
+      //will work with set, map. Won't work with obj.
+      //Constructs supporting iteration
+      /**
+      const [a,b] = new Set(['a', 'b', 'c']);
+      for-of loop:
+      const arr = Array.from(new Set(['a', 'b', 'c']));
+      const arr = [...new Set(['a', 'b', 'c'])];
+      const map = new Map([[false, 'no'], [true, 'yes']]);
+      const set = new Set(['a', 'b', 'c']);
+      Promise.all(iterableOverPromises).then(···);
+      Promise.race(iterableOverPromises).then(···);
+      yield* anIterable;
+      Note that WeakMaps are not iterable.
+
+      **/
+      let iterator = myArray[Symbol.iterator]();
+      let result = iterator.next();
+      while (!result.done) {
+          console.log(result.value);
+          result = iterator.next();
+      }
+
+      let someSet = new Set('bmw1', 'audi1', 'internet1');
+      let iteratorSet = someSet[Symbol.iterator]();
+      let resultSet = iteratorSet.next();
+      while (!resultSet.done) {
+          console.log(result.value);
+          resultSet = iteratorSet.next();
+      }
+    })();
+    </script>
+  </body>
+</html>
