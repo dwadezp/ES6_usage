@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Iterators and iterable</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+    (function(){
+      'user strict';
+      //Iterators
+      /**
+      • An iterable is a data structure that wants to make its elements accessible to the public.
+        It does so by implementing a method whose key is Symbol.iterator. That method is a
+        factory for iterators.
+      • An iterator is a pointer for traversing the elements of a data structure (think cursors in
+        databases).
+      */
+      const myArray = ["bmw", "audi", "merc"];
+      for (var value of myArray) {
+          console.log(value);
+      }
+      //myArray.next()//undefined
+      debugger;
+      // bmw audi merc
+      //will work with set, map. Won't work with obj.
+      //Constructs supporting iteration
+      /**
+      const [a,b] = new Set(['a', 'b', 'c']);
+      for-of loop:
+      const arr = Array.from(new Set(['a', 'b', 'c']));
+      const arr = [...new Set(['a', 'b', 'c'])];
+      const map = new Map([[false, 'no'], [true, 'yes']]);
+      const set = new Set(['a', 'b', 'c']);
+      Promise.all(iterableOverPromises).then(···);
+      Promise.race(iterableOverPromises).then(···);
+      yield* anIterable;
+      Note that WeakMaps are not iterable.
+
+      **/
+      let iterator = myArray[Symbol.iterator]();
+      let result = iterator.next();
+      while (!result.done) {
+          console.log(result.value);
+          result = iterator.next();
+      }
+
+      let someSet = new Set('bmw1', 'audi1', 'internet1');
+      let iteratorSet = someSet[Symbol.iterator]();
+      let resultSet = iteratorSet.next();
+      while (!resultSet.done) {
+        console.log(resultSet.value);
+        resultSet = iteratorSet.next();
+      }
+
+
+      function Basket() {
+          // array to hold things inside the basket
+          this.container = [];
+      }
+
+      // business method add that puts the given item in the basket
+      Basket.prototype.add = function(item) {
+          if (!!item) {
+              this.container.push(item);
+          }
+      }
+
+      var fruitBasket = new Basket();
+
+      // put fruits in the fruitBasket
+      fruitBasket.add('apple');
+      fruitBasket.add('banana');
+      fruitBasket.add('orange');
+      // list all fruits in the fruitBasket
+      for(let index=0; index < fruitBasket.container.length; index++){
+        console.log(fruitBasket.container[index]);
+      }
+      //*****************************
+
+      function BasketIt() {
+          this.container = [];
+
+          // maintain the state of current index value while iterating
+          this._index = 0;
+      }
+
+      BasketIt.prototype.add = function(item) {
+        debugger;
+          if (!!item) {
+              this.container.push(item);
+          }
+      }
+
+      BasketIt.prototype.getList = function() {
+        debugger;
+         return this.container;
+      }
+
+            // define custom iterator
+
+
+      let someBasket = new BasketIt();
+      someBasket.add('appleIt');
+      someBasket.add('bananaIt');
+      someBasket.add('orangeIt');
+
+
+      someBasket[Symbol.iterator] = function() {
+
+          return {
+              next: function() {
+                  var result;
+                  debugger;
+                  if (this._index < this.container.length) {
+                      result = {
+                          value: this.container[this._index],
+                          done: false
+                      };
+                      this._index++;
+                  } else {
+                      // completed iterating through all items.
+                      result = {
+                          done: true
+                      }
+                      this._index = 0;
+                  }
+
+                  return result;
+              }.bind(this)
+          };
+      }
+
+      /*let resultIterator =  someBasket[Symbol.iterator]();
+      debugger;
+      let resultIt = resultIterator.next();
+
+      debugger;
+      while (!resultIt.done) {
+        console.log(resultIt.value);
+        resultIt = resultIterator.next();
+      }*/
+      for (let fruit of someBasket) {
+        console.log('fruit fetched through iterator is ', fruit);
+      }
+      /**
+      By definition, A generator is a special type of function that works as a factory for iterators. In English, a generator in a function returns a {value: 'val', done: false} if there are items left and
+      returns {done:true} if there are no items.
+
+      yield is a special keyword that will return a value in the form of {value: 'val', done: false}
+      */
+      function BasketGen() {
+          this.container = [];
+      }
+
+      BasketGen.prototype.add = function(item) {
+          if (!!item) {
+              this.container.push(item);
+          }
+      }
+
+      BasketGen.prototype[Symbol.iterator] = function*() {
+          for(let index=0; index < this.container.length; index++){
+              yield this.container[index];
+          }
+
+      }
+
+      const genBasket = new BasketGen();
+      genBasket.add('apple');
+      genBasket.add('banana');
+      genBasket.add('orange');
+
+      const genIter = genBasket[Symbol.iterator]();
+      let genIterResult = genIter.next();
+      while (!genIterResult.done) {
+        console.log(genIterResult.value);
+        genIterResult = genIter.next();
+      }
+
+    })();
+    </script>
+  </body>
+</html>
